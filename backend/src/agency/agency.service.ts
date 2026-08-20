@@ -1,24 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAgencyDto } from './dto/create-agency.dto';
 import { UpdateAgencyDto } from './dto/update-agency.dto';
-
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class AgencyService {
-  create(createAgencyDto: CreateAgencyDto) {
-    return 'This action adds a new agency';
-  }
+constructor(private prisma:PrismaService){
+}
 
   findAll() {
     return `This action returns all agency`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} agency`;
+  async findOne(id: string) {
+    const agency = await this.prisma.agency.findUnique({
+      where:{id},
+      include:{
+        projects:true
+      }
+    })
+    if(!agency){
+      throw new NotFoundException("Агенство не найдено");
+    }
+    return agency;
   }
 
-  update(id: number, updateAgencyDto: UpdateAgencyDto) {
-    return `This action updates a #${id} agency`;
-  }
+async update(id: string, updateAgencyDto: UpdateAgencyDto) {
+  return this.prisma.agency.update({
+    where: { id },
+    data: updateAgencyDto,
+  });
+}
 
   remove(id: number) {
     return `This action removes a #${id} agency`;

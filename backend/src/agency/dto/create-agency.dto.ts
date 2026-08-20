@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsString, Length} from "class-validator"; 
+import {IsEmail, IsNotEmpty, IsString, Length, MinLength} from "class-validator"; 
 export class CreateAgencyDto {
     @IsString() 
     @IsNotEmpty()
@@ -7,4 +7,5 @@ export class CreateAgencyDto {
     @IsEmail()
     @IsNotEmpty()
     email!:string;
+    
 }
