@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Scene } from './components/Scene';
 import type { PlacedItem } from './components/Scene';
+import { AdminCatalogManager } from './components/AdminCatalogManager';
 import './App.css';
 
 const api = axios.create({ baseURL: 'http://localhost:3000' });
@@ -92,7 +93,7 @@ function Login({ onSuccess }: { onSuccess: (token: string) => void }) {
   );
 }
 
-function ControlPanel({ agency }: { agency: Agency | null }) {
+function ControlPanel({ agency, token }: { agency: Agency | null; token: string }) {
   const [size, setSize] = useState({ width: 3, length: 3 });
   const [items, setItems] = useState<PlacedItem[]>([]);
   const [modelUrl, setModelUrl] = useState<string>(MODEL_OPTIONS[0].url);
@@ -138,6 +139,9 @@ function ControlPanel({ agency }: { agency: Agency | null }) {
           Очистить сцену
         </button>
       </section>
+      <aside className="catalog-manager-panel">
+        <AdminCatalogManager token={token} />
+      </aside>
       <Scene
         width={size.width}
         length={size.length}
@@ -183,7 +187,7 @@ export function App() {
     }} />;
   }
 
-  return <ControlPanel agency={agency} />;
+  return <ControlPanel agency={agency} token={token} />;
 }
 
 export default App;
